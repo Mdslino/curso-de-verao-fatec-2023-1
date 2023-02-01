@@ -1,0 +1,10 @@
+heartbeat.monitors:
+  - type: http
+    id: ping-web-app
+    name: Web App
+    hosts: ["http://web_app:8000/api/v1/healthcheck"]
+    schedule: '@every 30s'
+    check.response.status: [200]
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]

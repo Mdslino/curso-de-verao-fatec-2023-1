@@ -5,12 +5,25 @@
         <!-- Required meta tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
         {% block styles %}
             <!-- Bootstrap CSS -->
             {{ bootstrap.load_css() }}
         {% endblock %}
         <title>{{ title }}</title>
+        {% block js %}
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://unpkg.com/htmx.org@1.8.5"></script>
+            <script
+                    src="https://unpkg.com/@elastic/apm-rum@5.12.0/dist/bundles/elastic-apm-rum.umd.min.js">
+            </script>
+            <script>
+                elasticApm.init({
+                    serviceName: 'curso-de-verao',
+                    serverUrl: 'http://localhost:8200',
+                    serviceVersion: '1.00'
+                })
+            </script>
+        {% endblock %}
     {% endblock %}
 </head>
 <body>

@@ -18,6 +18,9 @@ services:
     <<: *app
     ports:
       - "8000:8000"
+    environment:
+      ELASTIC_APM_SERVER_URL: http://apm-server:8200
+      SQLALCHEMY_DATABASE_URI: postgresql://postgres:postgres@db:5432/postgres
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/healthcheck"]
       interval: 30s
@@ -34,7 +37,7 @@ services:
     command: make migrate
 
   db:
-    image: postgres:alpine
+    image: postgres:13-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -44,11 +47,95 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.8
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false
+    ports:
+        - "5601:5601"
+        - "5602:5602"
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.17.8
+    container_name: apm-server
+    environment:
+#      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+#      - KIBANA_HOST=http://kibana:5601
+#      - xpack.security.enabled=false
+#      - apm-server.rum.enabled=true
+#      - apm-server.rum.source_mapping.enabled=true
+#      - apm-server.auth.anonymous.rate_limit.event_limit=300
+#      - apm-server.auth.anonymous.rate_limit.ip_limit=1000
+      - apm-server.rum.allow_origins=*
+    ports:
+      - "8200:8200"
+      - "8201:8201"
+    volumes:
+      - ./apm-server.yml:/usr/share/apm-server/apm-server.yml
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+
+  heartbeat:
+    image: docker.elastic.co/beats/heartbeat:7.17.8
+    container_name: heartbeat
+    environment:
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - KIBANA_HOST=http://kibana:5601
+      - xpack.security.enabled=false
+    volumes:
+      - ./heartbeat.yml:/usr/share/heartbeat/heartbeat.yml
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+
 volumes:
   postgres_data:
+  elasticsearch_data:
+  kibana_data:
+  metricbeat_data:

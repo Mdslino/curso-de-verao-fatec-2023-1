@@ -21,6 +21,8 @@ class Settings(BaseSettings):
         "src.blueprints.webui:init_app",
         "src.blueprints.restapi:init_app",
         "src.auth.blueprints.webui:init_app",
+        "src.todo.blueprints.webui:init_app",
+        "src.ext.apm:init_app",
     ]
 
     TEMPLATES_AUTO_RELOAD: bool = True
@@ -40,6 +42,9 @@ class Settings(BaseSettings):
         "flask_debugtoolbar.panels.profiler.ProfilerDebugPanel",
         "flask_debugtoolbar.panels.config_vars.ConfigVarsDebugPanel",
     ]
+
+    ELASTIC_APM_SERVICE_NAME: str = "Curso de Verão"
+    ELASTIC_APM_SERVER_URL: str = "http://localhost:8200"
 
 
 settings = Settings()

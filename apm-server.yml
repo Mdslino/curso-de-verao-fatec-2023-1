@@ -1,0 +1,13 @@
+apm-server.rum.enabled: true
+apm-server.rum.event_rate.limit: 300
+apm-server.rum.event_rate.lru_size: 1000
+apm-server.rum.allow_origins: ['*']
+apm-server.rum.library_pattern: "node_modules|bower_components|~"
+apm-server.rum.exclude_from_grouping: "^/webpack"
+apm-server.rum.source_mapping.cache.expiration: 5m
+apm-server.rum.source_mapping.index_pattern: "apm-*-sourcemap*"
+output.elasticsearch.hosts: ["http://elasticsearch:9200"]
+apm-server.host: "0.0.0.0:8200"
+setup.kibana.host: "kibana:5601"
+setup.template.enabled: true
+logging.to_files: false
