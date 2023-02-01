@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
+        <title>{{ title }}</title>
+    {% endblock %}
+</head>
+<body>
+<!-- Content -->
+<div class="container-fluid">
+    {% include 'navbar.html' %}
+    {% block messages %}
+    {% endblock %}
+    {% block content %}{% endblock %}
+</div>
+{% block scripts %}
+    <!-- Optional JavaScript -->
+    {{ bootstrap.load_js() }}
+{% endblock %}
+</body>
+</html>
