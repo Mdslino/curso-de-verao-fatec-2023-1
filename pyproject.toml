@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "template-flask"
+name = "curso-de-verao"
 version = "0.1.0"
 description = ""
 authors = ["Marcelo Lino <mdslino@gmail.com>"]
@@ -21,6 +21,7 @@ Flask-Migrate = "^3.1.0"
 Flask-Login = "^0.6.2"
 Flask-WTF = "^1.0.1"
 sqlalchemy-utils = "^0.39.0"
+sqlalchemy = "<2.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
