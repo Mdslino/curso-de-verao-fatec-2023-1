@@ -32,10 +32,10 @@ test-coverage:
 
 #Run Serction
 run:
-	@gunicorn "src.app:create_app()" -k gevent -b 0.0.0.0:8000 -w 4 --preload --access-logfile=- --error-logfile=- --log-level info
+	@gunicorn "src.app:create_app()" -k gevent -b 0.0.0.0:8000 -w 4 --access-logfile=- --error-logfile=- --log-level info
 
 run-dev:
-	@gunicorn "src.app:create_app()" -k gevent --bind 0.0.0.0:8000 --preload --reload --access-logfile=- --error-logfile=- --log-level debug
+	@gunicorn "src.app:create_app()" -k gevent --bind 0.0.0.0:8000 --reload --access-logfile=- --error-logfile=- --log-level debug
 
 # Lint Section
 black:
@@ -62,3 +62,6 @@ isort-check:
 	@isort --check-only src/
 
 lint: flake8 black-check isort-check
+
+migrate:
+	@flask db upgrade
