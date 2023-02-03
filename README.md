@@ -1,105 +1,47 @@
-# Arquitetura Definitiva para Projetos Flask
+# Curso de Verão 2023/1 Fatec São José dos Campos
 
-Tutorial em texto em: https://codeshow.com.br/arquitetura-web-python-flask/
+## Rastreabilidade e Observabilidade
 
-Video: https://youtu.be/-qWySnuoaTM
-Slides: http://bit.ly/codeshow-003-arquitetura-flask ou [googledrive](https://docs.google.com/presentation/d/e/2PACX-1vTZfj2xF3-Nf4NZO8V4HNr2rQNt0ci2kP19OT3Uhrzljl7MZj5Txl_AVlNt4upnCl3aYEJDAfiELpd7/pub?start=false&loop=false&delayms=15000)
+## Objetivo
 
-Código parte da apresentação na https://pyjamas.live conference
+Esse repositório foi utilizado como artefato para exemplificar um sistema em execução com cobertura de um
+sistema de observabilidade.
 
----
+## Softwares utilizados
 
-## Clone
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Elasticsearch](https://www.elastic.co/pt/elasticsearch/)
+- [Kibana](https://www.elastic.co/pt/kibana/)
+- [Heartbeat](https://www.elastic.co/pt/beats/heartbeat)
+- [Elastic APM](https://www.elastic.co/pt/apm)
+- [Flask](https://flask.palletsprojects.com/en/2.0.x/)
+- [Python](https://www.python.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 
-```bash
-git clone https://github.com/codeshow/003-arquitetura-flask.git
-```
+## Como executar
 
-## ou faça o download
+Primeiramente, é necessário ter o Docker e o Docker Compose instalados na máquina.
 
-https://github.com/codeshow/003-arquitetura-flask/archive/new.zip
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-ou
-
-```bash
-wget https://github.com/codeshow/003-arquitetura-flask/archive/new.zip
-```
-
-## Ambiente
-
-Python 3.6+
-Ative a sua virtualenv
+Após a instalação, basta executar o comando abaixo na raiz do projeto:
 
 ```bash
-pip install -r requirements.txt
-pip install -r requirements_dev.txt
-pip install -r requirements_test.txt
+docker-compose up -d
 ```
 
-## Testando
+## Como acessar
 
-```bash
-pytest src/tests
-```
+- [Kibana](http://localhost:5601/)
+- [Heartbeat](http://localhost:5601/app/uptime)
+- [Elastic APM](http://localhost:5601/app/apm)
+- [Flask](http://localhost:8000/)
 
-## Executando
+As páginas da aplicação web são:
 
-```bash
-flask create-db  # rodar uma vez
-flask populate-db # rodar uma vez
-flask add-user -u admin -p 1234  # adiciona usuario admin
-flask run
-```
-
-Acesse:
-
-- Website: http://localhost:5000
-- Admin: http://localhost:5000/admin/
-  - user: admin, senha: 1234
-- API GET:
-  - https://localhost:5000/api/v1/product/
-  - https://localhost:5000/api/v1/product/1
-  - https://localhost:5000/api/v1/product/2
-  - https://localhost:5000/api/v1/product/3
-
-
-## Structure
-
-```bash
-.
-├── Makefile
-├── src  (MAIN PACKAGE)
-│   ├── app.py  (APP FACTORIES)
-│   ├── blueprints  (BLUEPRINT FACTORIES)
-│   │   ├── __init__.py
-│   │   ├── restapi  (REST API)
-│   │   │   ├── __init__.py
-│   │   │   └── resources.py
-│   │   └── webui  (FRONT END)
-│   │       ├── __init__.py
-│   │       ├── templates
-│   │       │   ├── index.html
-│   │       │   └── product.html
-│   │       └── views.py
-│   ├── ext (EXTENSION FACTORIES)
-│   │   ├── admin.py
-│   │   ├── appearance.py
-│   │   ├── auth.py
-│   │   ├── commands.py
-│   │   ├── configuration.py
-│   │   ├── database.py
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── models.py  (DATABASE MODELS)
-│   └── tests  (TESTS)
-│       ├── conftest.py
-│       ├── __init__.py
-│       └── test_api.py
-├── README.md
-├── requirements_dev.txt
-├── requirements_test.txt
-├── requirements.txt
-└── settings.toml  (SETTINGS)
-
-7 directories, 26 files
-```
+- [Home](http://localhost:8000/)
+- [Cadastro](http://localhost:8000/auth/signup)
+- [Login](http://localhost:8000/auth/login)
+- [TODO](http://localhost:8000/todo)
